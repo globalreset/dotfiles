@@ -1,0 +1,136 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+  Plug 'github/copilot'
+  Plug 'scrooloose/nerdtree'
+  Plug 'tweekmonster/wstrip.vim'
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
+  "Plug 'jeetsukumaran/vim-buffergator'
+  Plug 'itchyny/lightline.vim'
+  Plug 'vhda/verilog_systemverilog.vim'
+  Plug 'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }
+  "Plug 'vim-ruby/vim-ruby'
+  "Plug 'zivyangll/git-blame.vim'
+  "nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+call plug#end()
+
+set updatetime=100
+set nocompatible
+
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+filetype indent on
+filetype plugin on
+syntax on
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set smarttab
+set expandtab
+
+set autoindent		" always set autoindenting on
+set copyindent   " copy the current indenting structure
+
+set bs=2		" allow backspacing over everything in insert mode
+
+set tw=0 " no limit to the width of text
+
+set viminfo='20,\"50	" read/write a .viminfo file, don't store more
+			" than 50 lines of registers
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+"set cursorline
+set number
+set mouse=a
+
+set backupdir=$HOME/.vim/swapfiles//
+set directory=$HOME/.vim/swapfiles//
+
+" Set foreground and background colors
+highlight Normal term=bold cterm=NONE ctermfg=green ctermbg=NONE gui=NONE guifg=green guibg=black
+highlight Visual term=bold cterm=reverse ctermfg=green ctermbg=NONE gui=reverse guifg=green guibg=black
+highlight Search term=bold cterm=reverse ctermfg=yellow ctermbg=NONE gui=reverse guifg=yellow guibg=black
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+set guifont=Monospace\ 10
+"set guifont=Sans\ 10
+"set guifont=DejaVu\ Sans\ Mono\ 10
+"set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
+"set guifont=Consolas\ 11
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+   autocmd BufRead,BufNewFile makefile  set noexpandtab
+   autocmd BufRead,BufNewFile *.ucf     setf ucf
+   autocmd FileType c,cpp,ino,sh,java,php set smartindent
+   "if system("sed -e 's\/.*\\/_.*\/_\/'", expand("%:p:h")) == "_"
+   "   echo "Editing file in gather folder"
+   "else
+      autocmd FileType sv,svh,svp,rb,rakefile,c,cpp,ino,sh,java,php autocmd BufWritePre <buffer> %s/\s\+$//e
+   "endif
+endif " has("autocmd")
+
+:function s:svnBlame()
+   let line = line(".")
+   setlocal nowrap
+   aboveleft 18vnew
+   %!svn blame -x-w "#"
+   setlocal nomodified readonly buftype=nofile nowrap winwidth=1
+   "setlocal nonumber
+   exec "normal " . line . "G"
+   setlocal scrollbind
+   wincmd p
+   setlocal scrollbind
+   syncbind
+:endfunction
+
+:function s:gitBlame()
+   belowright 18new
+   %!git blame -w "#"
+   setlocal nomodified readonly buftype=nofile nowrap winwidth=1
+:endfunction
+
+:map <Leader>s :call <SID>svnBlame()<CR>
+:map <Leader>g :call <SID>gitBlame()<CR>
+:command SvnBlame call s:svnBlame()
+:command GitBlame call s:gitBlame()
+" add a file explorer to the left
+" lefta vsplit .
+" vertical resize 26
+"
+
+set rtp+=/home/scotth/.linuxbrew/opt/fzf
+
+command! -bang -nargs=* Find call s:cmd('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+map <Leader>f :FZF<CR>
+
+map <F2> :NERDTreeToggle<CR>
+
+" Remap space and ctrl-space to page up/down in command mode
+map <Space> 
+map <C-Space> 
+map <S-Space> 
+
+" Kill wacky ctrl-space behavior in terminal vim
+imap <Nul> <Space>
+" Remap ctrl-space to ^N (completion) in insertion mode
+imap <C-Space> 
+
+" Make p in Visual mode replace the selected text with the "" register.
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+inoremap jk <Esc>
+
