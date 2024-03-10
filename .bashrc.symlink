@@ -1,14 +1,8 @@
 
-# override, otherwise this stays stuck on tcsh
-export SHELL=/bin/bash
-
 # Permission Format: Owner(r/w/x)/Group/Others.
 #   File Permission: If (umask bit == 1) then no permission
 #   Example: 022 = Owner (r=0/w=0/x=0 => all on), Group & Others (r=0/w=1/x=0 => can't write)
 umask 022
-
-set PRINTER = dal-prt-clr
-set LPDEST = dal-prt-clr
 
 # Don't wait for job termination notification
 set -o notify
@@ -20,8 +14,8 @@ set -o vi
 
 # Don't put duplicate lines in the history.
 export HISTCONTROL=erasedups
-export HISTSIZE=100000
-export HISTFILESIZE=100000
+export HISTSIZE=10000
+export HISTFILESIZE=10000
 shopt -s histappend
 shopt -s histreedit
 shopt -s checkwinsize
@@ -31,11 +25,6 @@ shopt -s nocaseglob
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
-#complete -W "$(vlog -help | grep -E "^ *[-+]" | grep -v '\-\-' | awk '{print $1}')" -o default vlog
-#complete -W "$(vsim -help | grep -E "^ *[-+]" | grep -v '\-\-' | awk '{print $1}')" -o default vsim
-#complete -W "$(qverilog -help | grep -E "^ *[-+]" | grep -v '\-\-' | awk '{print $1}')" -o default qverilog
-#complete -W "$(map -h spartan6 | grep -E "^ *[-+]" | grep -v '\-\-' | awk '{print $1}')" -o default map
-#complete -W "$(par -h spartan6 | grep -E "^ *[-+]" | grep -v '\-\-' | awk '{print $1}')" -o default par
 
 export PS1=$'\\[\\033]0;\\w\\007\n\\033[32m\\]\\u@\\h \\[\\033[33m\\w\\033[0m\\]\n$ '
 PS2='>export  '
@@ -50,37 +39,12 @@ export VISUAL='gvim -f'
 
 export GREP_OPTIONS="--color=auto"
 export LESS="-iFXR"
-eval "$(SHELL=/bin/zsh lesspipe.sh)"
+eval "$(SHELL=/bin/bash lesspipe.sh)"
 
 export INPUTRC="~/.inputrc"
 
 source ~/.aliases
 
-
-
-source /projects/asic/notsupported/apps/lmod/8.3.17/init/profile
-#module load StdEnv 2> /dev/null
-#module load brew 2> /dev/null
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-export HOMEBREW_CURL_PATH="/home/linuxbrew/bin/curl"
-export HOMEBREW_GIT_PATH="/projects/asic/notsupported/apps/git/2.30.1/bin/git"
-if [[ $- == *i* ]] && type brew &>/dev/null; then
-   HOMEBREW_PREFIX="$(brew --prefix)"
-   for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-      [[ -r "$COMPLETION" ]] && source "$COMPLETION"
-   done
+if [ -f ~/.bashrc.local ]; then
+    source ~/.bashrc.local
 fi
-
-#[ -f /home/scotth/.linuxbrew/etc/profile.d/autojump.sh ] && . /home/scotth/.linuxbrew/etc/profile.d/autojump.sh
-#eval $(thefuck --alias)
-#[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-#/home/linuxbrew/.linuxbrew/etc/bash_completion.d
-#eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-#export HOMEBREW_CURL_PATH=/home/linuxbrew/.linuxbrew/bin/curl
-#export HOMEBREW_GIT_PATH=/home/linuxbrew/.linuxbrew/bin/git
-#export FPATH=$(brew --prefix)/share/zsh/functions:$FPATH
-#[ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
-#eval $(thefuck --alias)
-

@@ -1,28 +1,27 @@
 #!/bin/bash
 
-# get the expanded dotfiles directory path, removing scripts/setup.sh from the end
-DOTFILES_DIR=$(dirname $(dirname $(realpath $0)))
+# Dynamically determine the full path of the dotfiles directory
+DOTFILES_DIR=$(realpath ~/dotfiles)
+echo "Dotfiles directory: $DOTFILES_DIR"
 
-# Function to create symlinks
+# Function to create symlinks in the user's home directory
 create_symlink() {
-    local src=$1
-    # remove DOTFILES_DIR from the beginning of this argument
-    local rel_path=${src#$DOTFILES_DIR}
-    local filename=${rel_path##*/}      # Extract the filename
-    local dst=${HOME}/${rel_path/.symlink/} # Destination path with '.symlink' removed
+  local src=$1
+  local dst=$HOME/`echo $src | sed "s/\.symlink//" | sed "s/.*dotfiles\///"`
 
-    # Ensure the parent directory of the destination exists
-    mkdir -p "$(dirname "$dst")"
+  # Ensure the parent directory of the destination exists
+  mkdir -p "$(dirname "$dst")"
 
-    # Create the symlink, after removing any existing destination file
-    echo "linking $src to $dst"
-    #ln -sf "$src" "$dst"
+  # Check if the destination file already exists
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    echo "File exists, skipping: $dst"
+  else
+    echo "Linking $src to $dst"
+    ln -sf "$src" "$dst"
+  fi
 }
 
-# Export the function so it's available to find -exec
 export -f create_symlink
 
-cd $DOTFILES_DIR
-# Find all .symlink files and create corresponding symlinks in the home directory
-find . -type f -name "*.symlink" -exec bash -c 'create_symlink "$0"' {} \;
-
+# Find and process all .symlink files within the dotfiles directory
+find "$DOTFILES_DIR" -type f -name "*.symlink" -exec bash -c 'create_symlink "{}"' \;
