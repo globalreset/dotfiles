@@ -1,0 +1,71 @@
+# -------------------------------------------------------------
+# Aliases
+# -------------------------------------------------------------
+
+alias t="nobash=1 exec tcsh" # used in environment that forces me into tcsh
+alias b="exec bash"
+alias z="exec zsh"
+
+alias gvim="gvim -p"
+alias nvim="nvim -p"
+alias vim="nvim -p"
+alias vi="nvim -p"
+
+alias cdp="cd p"
+
+alias cat='bat'
+alias more='less'
+alias less='less'
+alias whence='type -a'
+
+alias rm='rm -i'
+alias dir='exa --tree --level 2'
+alias vdir='exa -alh --tree --level 2'
+alias ls="ls -hF --color=auto"
+alias ll='exa -alh'
+alias la='ls -A'
+alias l='ls -C'
+alias lsl='ls -al'
+alias lsld='ls -ald'
+alias lslrt='ls -alrt'
+alias df='df -h'
+alias du='du -h'
+
+alias rg='rg -SL'
+alias cht='curl cht.sh'
+
+alias addr='ypcat -k aliases | grep -i'
+alias addrp='ypcat -k passwd  | grep -i'
+
+alias psm='ps -eaf | grep -E "^`whoami`"'
+
+alias whereami="cat /etc/hostname"
+alias page="ezpage"
+
+alias bdf='df -h'
+alias bdu='du -sdk [a-zA-Z0-9_-%]* .[a-zA-Z0-9_-%]* .'
+
+alias buffer='free -m | grep buffers/cache | sed -E "s/.* +[0-9]+ +//"'
+
+alias gitnvm='git reset --soft HEAD~1'
+
+alias scrls='screen -list | grep "Detached" | sed -e "s/^.*[0-9]\+\.\([a-zA-Z_0-9\-]\+\).*$/\1/"'
+alias scr='screen -x -R'
+
+function _scrls () {
+   COMPREPLY=( $(compgen -W "`scrls`" -- "${COMP_WORDS[COMP_CWORD]}") )
+}
+
+complete -F _scrls scr
+
+function ka () {
+   for i in `ps aux | grep $1 | grep -v grep | awk $'{print \$2}'` ;
+   do
+      echo $i;
+      kill $2 $i;
+   done;
+}
+
+function f() { fd -iIH "$1" "${@:2}"; }
+
+

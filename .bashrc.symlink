@@ -4,6 +4,11 @@
 #   Example: 022 = Owner (r=0/w=0/x=0 => all on), Group & Others (r=0/w=1/x=0 => can't write)
 umask 022
 
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
 # Don't wait for job termination notification
 set -o notify
 # Don't use ^D to exit
@@ -39,11 +44,20 @@ export VISUAL='gvim -f'
 
 export GREP_OPTIONS="--color=auto"
 export LESS="-iFXR"
-eval "$(SHELL=/bin/bash lesspipe.sh)"
-
 export INPUTRC="~/.inputrc"
 
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+if hash zoxide 2>/dev/null; then eval $(zoxide init --cmd cd bash); fi
+
 source ~/.aliases
+
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion 2>/dev/null
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion 2>/dev/null
+  fi
+fi
 
 if [ -f ~/.bashrc.local ]; then
     source ~/.bashrc.local
