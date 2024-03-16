@@ -1,0 +1,128 @@
+
+vim.cmd([[
+  set runtimepath^=~/.vim runtimepath+=~/.vim/after
+  let &packpath=&runtimepath
+  source ~/.vimrc
+]])
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+    {"nvim-treesitter/nvim-treesitter", event = "BufRead"}, -- Syntax highlighting
+    {"junegunn/fzf", event = "BufRead"}, -- Fuzzy finder
+    --{'github/copilot.vim'},
+
+    {'neovim/nvim-lspconfig'},
+    {'hrsh7th/cmp-nvim-lsp'},
+    {'hrsh7th/cmp-buffer'},
+    {'hrsh7th/cmp-path'},
+    {'hrsh7th/cmp-cmdline'},
+    {'hrsh7th/nvim-cmp'},
+    {'hrsh7th/cmp-vsnip'},
+    {'hrsh7th/vim-vsnip'},
+
+    {'nvim-lua/plenary.nvim'},
+    {'nvim-lua/popup.nvim'},
+    {'nvim-telescope/telescope.nvim'},
+    {'nvim-telescope/telescope-fzf-native.nvim'},
+    {'nvim-telescope/telescope-media-files.nvim'},
+    {'nvim-telescope/telescope-frecency.nvim'},
+    {'nvim-telescope/telescope-github.nvim'},
+    {'nvim-telescope/telescope-project.nvim'},
+    {'nvim-telescope/telescope-packer.nvim'},
+    {'nvim-telescope/telescope-symbols.nvim'},
+    {'scrooloose/nerdtree', event = "BufRead"},
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    --{'tweekmonster/wstrip.vim'},
+    --{'junegunn/fzf'},
+    --{'junegunn/fzf.vim'},
+    --{'jeetsukumaran/vim-buffergator'},
+    {'itchyny/lightline.vim'},
+    --{'vhda/verilog_systemverilog.vim'},
+    --{'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }},
+    -- Add more plugins here
+})
+
+require("catppuccin").setup {
+	term_colors = true,
+	transparent_background = false,
+	styles = {
+		comments = {},
+		conditionals = {},
+		loops = {},
+		functions = {},
+		keywords = {},
+		strings = {},
+		variables = {},
+		numbers = {},
+		booleans = {},
+		properties = {},
+		types = {},
+	},
+	color_overrides = {
+		mocha = {
+			base = "#000000",
+			mantle = "#000000",
+			crust = "#000000",
+		},
+	},
+	integrations = {
+	},
+}
+vim.cmd.colorscheme "catppuccin"
+
+vim.opt.termguicolors = true
+vim.opt.clipboard= "unnamedplus"
+vim.lsp.set_log_level("debug")
+
+--require'lspconfig'.svls.setup{
+--    -- Add any configuration options here
+--    root_dir = function(fname)
+--        -- Use nvim-lspconfig utility to search upwards for a specific file
+--        local util = require('lspconfig.util')
+--        return util.find_git_ancestor(fname) or
+--               util.path.dirname(fname)
+--    end,
+--}
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})

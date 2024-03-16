@@ -1,52 +1,172 @@
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Sets how many lines of history VIM has to remember
+set history=500
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+" Set to auto read when a file is changed from the outside
+set autoread
+""au FocusGained,BufEnter * silent! checktime
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = ","
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set 7 lines to the cursor - when moving vertically using j/k 
+set scrolloff=5
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+    set wildignore+=.git\*,.hg\*,.svn\*
+else
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
-call plug#begin('~/.vim/plugged')
-  Plug 'github/copilot'
-  Plug 'scrooloose/nerdtree'
-  Plug 'tweekmonster/wstrip.vim'
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
-  "Plug 'jeetsukumaran/vim-buffergator'
-  Plug 'itchyny/lightline.vim'
-  Plug 'vhda/verilog_systemverilog.vim'
-  Plug 'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }
-  "Plug 'vim-ruby/vim-ruby'
-  "Plug 'zivyangll/git-blame.vim'
-  "nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
-call plug#end()
+" Always show current position
+set ruler
 
-set updatetime=100
-set nocompatible
+" Height of the command bar
+set cmdheight=1
 
-set hlsearch
-set incsearch
+" A buffer becomes hidden when it is abandoned
+set hid
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ignore case when searching
 set ignorecase
+
+" When searching try to be smart about cases
 set smartcase
 
-filetype indent on
-filetype plugin on
-syntax on
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
-set smarttab
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+" Properly disable sound on errors on MacVim
+if has("gui_macvim")
+    autocmd GUIEnter * set vb t_vb=
+endif
+
+" Add a bit extra margin to the left
+set foldcolumn=1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+
+" Set regular expression engine automatically
+set regexpengine=0
+
+set background=dark
+set t_Co=256
+" Set foreground and background colors
+"highlight Normal term=bold cterm=NONE ctermfg=green ctermbg=NONE gui=NONE guifg=green guibg=black
+"highlight Visual term=bold cterm=reverse ctermfg=green ctermbg=NONE gui=reverse guifg=green guibg=black
+"highlight Search term=bold cterm=reverse ctermfg=yellow ctermbg=NONE gui=reverse guifg=yellow guibg=black
+"highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+highlight Normal term=bold cterm=NONE ctermfg=250 ctermbg=NONE gui=NONE guifg=#cdd6f4 guibg=#1e1e2e
+highlight Visual term=bold cterm=reverse ctermfg=177 ctermbg=NONE gui=reverse guifg=#89b4fa guibg=#1e1e2e
+highlight Search term=bold cterm=reverse ctermfg=216 ctermbg=NONE gui=reverse guifg=#f5c2e7 guibg=#1e1e2e
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=#565f89 guibg=NONE
+
+" Set extra options when running in GUI mode
+if has("gui_running")
+    set guioptions-=T
+    set guioptions-=e
+    "set t_Co=256
+    set guitablabel=%M\ %t
+    set guifont=Monospace\ 10
+    "set guifont=Sans\ 10
+    "set guifont=DejaVu\ Sans\ Mono\ 10
+    "set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
+    "set guifont=Consolas\ 11
+endif
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
 set expandtab
 
-set autoindent		" always set autoindenting on
-set copyindent   " copy the current indenting structure
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=2
+set tabstop=2
+set softtabstop=0
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+"set copyindent   " copy the current indenting structure
+set wrap "Wrap lines
 
 set bs=2		" allow backspacing over everything in insert mode
 
-set tw=0 " no limit to the width of text
+"set updatetime=100
+"set nocompatible
 
 set viminfo='20,\"50	" read/write a .viminfo file, don't store more
 			" than 50 lines of registers
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -58,29 +178,165 @@ set mouse=a
 set backupdir=$HOME/.vim/swapfiles//
 set directory=$HOME/.vim/swapfiles//
 
-" Set foreground and background colors
-highlight Normal term=bold cterm=NONE ctermfg=green ctermbg=NONE gui=NONE guifg=green guibg=black
-highlight Visual term=bold cterm=reverse ctermfg=green ctermbg=NONE gui=reverse guifg=green guibg=black
-highlight Search term=bold cterm=reverse ctermfg=yellow ctermbg=NONE gui=reverse guifg=yellow guibg=black
-highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
 
-set guifont=Monospace\ 10
-"set guifont=Sans\ 10
-"set guifont=DejaVu\ Sans\ Mono\ 10
-"set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
-"set guifont=Consolas\ 11
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Close all the buffers
+map <leader>ba :bufdo bd<cr>
+
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext<cr>
+
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+map <leader>q :qall!<cr>
+" Specify the behavior when switching between buffers
+try
+  set switchbuf=useopen,usetab,newtab
+  set stal=2
+catch
+endtry
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
-   autocmd BufRead,BufNewFile makefile  set noexpandtab
-   autocmd BufRead,BufNewFile *.ucf     setf ucf
-   autocmd FileType c,cpp,ino,sh,java,php set smartindent
-   "if system("sed -e 's\/.*\\/_.*\/_\/'", expand("%:p:h")) == "_"
-   "   echo "Editing file in gather folder"
-   "else
-      autocmd FileType sv,svh,svp,rb,rakefile,c,cpp,ino,sh,java,php autocmd BufWritePre <buffer> %s/\s\+$//e
-   "endif
+  " Return to last edit position when opening files (You want this!)
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+  autocmd BufRead,BufNewFile makefile  set noexpandtab
+  autocmd BufRead,BufNewFile *.ucf     setf ucf
+  "autocmd FileType c,cpp,ino,sh,java,php set smartindent
+  "if system("sed -e 's\/.*\\/_.*\/_\/'", expand("%:p:h")) == "_"
+  "   echo "Editing file in gather folder"
+  "else
+  "   autocmd FileType sv,svh,svp,rb,rakefile,c,cpp,ino,sh,java,php autocmd BufWritePre <buffer> %s/\s\+$//e
+  "endif
 endif " has("autocmd")
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Editing mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remap VIM 0 to first non-blank character
+map 0 ^
+
+" Move a line of text using ALT+[jk] or Command+[jk] on mac
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+if has("mac") || has("macunix")
+  nmap <D-j> <M-j>
+  nmap <D-k> <M-k>
+  vmap <D-j> <M-j>
+  vmap <D-k> <M-k>
+endif
+
+" Delete trailing white space on save, useful for some filetypes ;)
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+endif
+
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>s? z=
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    endif
+    return ''
+endfunction
+
+" Don't close window, when deleting a buffer
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
+
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
+
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
+
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
+endfunction
+
+function! CmdLine(str)
+    call feedkeys(":" . a:str)
+endfunction
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
 
 :function s:svnBlame()
    let line = line(".")
@@ -110,10 +366,14 @@ endif " has("autocmd")
 " lefta vsplit .
 " vertical resize 26
 "
+if !empty(glob('~/.linuxbrew/opt/fzf'))
+  set rtp+=~/.linuxbrew/opt/fzf
+elseif !empty(glob('/home/linuxbrew/.linuxbrew/opt/fzf'))
+  set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
+end
 
-set rtp+=/home/scotth/.linuxbrew/opt/fzf
-
-command! -bang -nargs=* Find call s:cmd('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+"command! -bang -nargs=* Find call s:cmd('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+"command! -bang -nargs=* Find 'silent !rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" ' . shellescape(<q-args>) . ' | less -R'
 
 map <Leader>f :FZF<CR>
 
@@ -134,3 +394,28 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
 
 inoremap jk <Esc>
 
+""""""""""""""""""""""""""""""
+" => Plugins
+""""""""""""""""""""""""""""""
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" call PlugUpdate or PlugInstall when this list is edited
+call plug#begin('~/.vim/plugged')
+  "Plug 'github/copilot.vim'
+  Plug 'scrooloose/nerdtree'
+  Plug 'tweekmonster/wstrip.vim'
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
+  "Plug 'jeetsukumaran/vim-buffergator'
+  Plug 'vhda/verilog_systemverilog.vim'
+  Plug 'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }
+  Plug 'itchyny/lightline.vim'
+  "Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+  "Plug 'vim-ruby/vim-ruby'
+  "Plug 'zivyangll/git-blame.vim'
+  "nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+call plug#end()
