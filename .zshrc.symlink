@@ -11,14 +11,18 @@ fi
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  export FPATH=$(brew --prefix)/share/zsh/functions:$(brew --prefix)/share/zsh/site-functions
+elif [ -f ~/.linuxbrew/bin/brew ]; then
+  eval "$(~/.linuxbrew/bin/brew shellenv)"
 fi
 
-export HOMEBREW_CURL_PATH=/home/linuxbrew/.linuxbrew/bin/curl
-export HOMEBREW_GIT_PATH=/home/linuxbrew/.linuxbrew/bin/git
+if hash brew 2>/dev/null; then 
+  export FPATH=$(brew --prefix)/share/zsh/functions:$(brew --prefix)/share/zsh/site-functions
+  #[ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
+fi
 
-[ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
-if hash thefuck 2>/dev/null; then eval $(thefuck --alias); fi
+if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
+if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -139,7 +143,6 @@ export VISUAL='gvim -f'
 export GREP_OPTIONS="--color=auto"
 
 export LESS="-iFXR"
-if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 
 #eval "$(SHELL=/bin/bash lesspipe.sh)"
 

@@ -13,7 +13,6 @@ alias vi="nvim -p"
 
 alias cdp="cd p"
 
-alias cat='bat'
 alias more='less'
 alias less='less'
 alias whence='type -a'

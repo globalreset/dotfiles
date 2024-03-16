@@ -9,6 +9,19 @@ case $- in
       *) return;;
 esac
 
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ -f ~/.linuxbrew/bin/brew ]; then
+  eval "$(~/.linuxbrew/bin/brew shellenv)"
+fi
+
+if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
+if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
+if hash bat 2>/dev/nul; then alias cat='bat'; fi
+
+source ~/.aliases
+
 # Don't wait for job termination notification
 set -o notify
 # Don't use ^D to exit
@@ -45,11 +58,6 @@ export VISUAL='gvim -f'
 export GREP_OPTIONS="--color=auto"
 export LESS="-iFXR"
 export INPUTRC="~/.inputrc"
-
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-if hash zoxide 2>/dev/null; then eval $(zoxide init --cmd cd bash); fi
-
-source ~/.aliases
 
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
