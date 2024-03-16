@@ -216,6 +216,7 @@ map <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 map <leader>q :qall!<cr>
+map <leader>, :qall!<cr>
 " Specify the behavior when switching between buffers
 try
   set switchbuf=useopen,usetab,newtab
