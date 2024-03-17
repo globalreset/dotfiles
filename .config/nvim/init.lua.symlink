@@ -45,7 +45,7 @@ require("lazy").setup({
     {'scrooloose/nerdtree', event = "BufRead"},
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     --{'tweekmonster/wstrip.vim'},
-    --{'junegunn/fzf'},
+    --'junegunn/fzf'},
     --{'junegunn/fzf.vim'},
     --{'jeetsukumaran/vim-buffergator'},
     {'itchyny/lightline.vim'},
@@ -126,3 +126,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, opts)
   end,
 })
+
+vim.o.clipboard = 'unnamedplus'
+vim.cmd([[
+  let yank = '~/bin/win32yank.exe'
+  if !empty(glob(yank))
+    let g:clipboard = {
+              \   'name': 'win32yank-wsl',
+              \   'copy': {
+              \      '+': 'win32yank.exe -i --crlf',
+              \      '*': 'win32yank.exe -i --crlf',
+              \    },
+              \   'paste': {
+              \      '+': 'win32yank.exe -o --lf',
+              \      '*': 'win32yank.exe -o --lf',
+              \   },
+              \   'cache_enabled': 0,
+              \ }
+    if exists('g:loaded_clipboard_provider')
+      unlet g:loaded_clipboard_provider
+      runtime autoload/provider/clipboard.vim
+    endif
+  endif
+]])
