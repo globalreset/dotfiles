@@ -19,7 +19,7 @@ fi
 
 if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
-if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
+if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd j bash)"; fi
 if hash bat 2>/dev/null; then alias cat='bat'; fi
 
 if [ -f ~/.bash.d/cht.sh ]; then

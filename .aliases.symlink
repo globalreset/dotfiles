@@ -38,13 +38,7 @@ alias psm='ps -eaf | grep -E "^`whoami`"'
 alias whereami="cat /etc/hostname"
 alias page="ezpage"
 
-alias bdf='df -h'
-alias bdu='du -sdk [a-zA-Z0-9_-%]* .[a-zA-Z0-9_-%]* .'
-
-alias buffer='free -m | grep buffers/cache | sed -E "s/.* +[0-9]+ +//"'
-
 alias gitnvm='git reset --soft HEAD~1'
-
 
 function ka () {
    for i in `ps aux | grep $1 | grep -v grep | awk $'{print \$2}'` ;
