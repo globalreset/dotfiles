@@ -69,7 +69,7 @@ export PAGER='less -FRX'
 export EDITOR='vim'
 export VISUAL='gvim -f'
 
-export GREP_OPTIONS="--color=auto"
+#export GREP_OPTIONS="--color=auto"
 export LESS="-iFXR"
 export INPUTRC="~/.inputrc"
 
@@ -84,3 +84,5 @@ fi
 if [ -f ~/.bashrc.local ]; then
     source ~/.bashrc.local
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

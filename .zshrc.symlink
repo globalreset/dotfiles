@@ -158,7 +158,7 @@ export PAGER='less -FRX'
 export EDITOR='vim'
 export VISUAL='gvim -f'
 
-export GREP_OPTIONS="--color=auto"
+#export GREP_OPTIONS="--color=auto"
 
 export LESS="-iFXR"
 
@@ -166,4 +166,5 @@ export HOMEBREW_CURLRC=0
 export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
 fpath=(~/.zsh.d/ $fpath)
-fpath=(~/.zsh.d/ $fpath)
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
