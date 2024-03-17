@@ -4,6 +4,8 @@
 #   Example: 022 = Owner (r=0/w=0/x=0 => all on), Group & Others (r=0/w=1/x=0 => can't write)
 umask 022
 
+export PATH=$HOME/bin:$PATH
+
 case $- in
     *i*) ;;
       *) return;;
@@ -18,8 +20,11 @@ fi
 if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
-if hash bat 2>/dev/nul; then alias cat='bat'; fi
+if hash bat 2>/dev/null; then alias cat='bat'; fi
 
+if [ -f ~/.bash.d/cht.sh ]; then
+  . ~/.bash.d/cht.sh
+fi
 source ~/.aliases
 
 # Don't wait for job termination notification
@@ -42,6 +47,15 @@ shopt -s lithist
 shopt -s nocaseglob
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
+alias scrls='screen -list | grep "Detached" | sed -e "s/^.*[0-9]\+\.\([a-zA-Z_0-9\-]\+\).*$/\1/"'
+alias scr='screen -x -R'
+
+function _scrls () {
+   COMPREPLY=( $(compgen -W "`scrls`" -- "${COMP_WORDS[COMP_CWORD]}") )
+}
+
+complete -F _scrls scr
+
 complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
 
 export PS1=$'\\[\\033]0;\\w\\007\n\\033[32m\\]\\u@\\h \\[\\033[33m\\w\\033[0m\\]\n$ '
@@ -51,7 +65,7 @@ PS4='+export  '
 export LS_COLORS="no=00:fi=00:di=01;36:ln=01;35:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:"
 
 export TMPDIR=/tmp/
-export PAGER=less
+export PAGER='less -FRX'
 export EDITOR='vim'
 export VISUAL='gvim -f'
 

@@ -1,7 +1,7 @@
 
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export PATH=$HOME/bin:$PATH
 
 #ZSH_DISABLE_COMPFIX=true
 
@@ -16,13 +16,13 @@ elif [ -f ~/.linuxbrew/bin/brew ]; then
 fi
 
 if hash brew 2>/dev/null; then 
-  export FPATH=$(brew --prefix)/share/zsh/functions:$(brew --prefix)/share/zsh/site-functions
+  export fpath=($(brew --prefix)/share/zsh/functions $(brew --prefix)/share/zsh/site-functions $fpath)
   #[ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
 fi
 
-if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
-if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
-if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
+if [ -x ~/.zsh.d/ ]; then
+  export fpath=(~/.zsh.d $fpath)
+fi
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -73,14 +73,14 @@ setopt CDABLE_VARS
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-   autojump
+   #autojump
    branch
    brew
    dirhistory
    dotenv
    fzf-zsh-plugin
    git
-   git-branches
+   #git-branches
    git-extras
    rake
    rbenv
@@ -94,9 +94,29 @@ plugins=(
    zsh-syntax-highlighting
    )
 
-source $ZSH/oh-my-zsh.sh
+if [ -x $HOME/.oh-my-zsh ]; then
+  source $ZSH/oh-my-zsh.sh
+
+  #source ~/zsh-git-prompt/zshrc.sh
+  #function git_prompt_info() {
+  #    ref=$(/home/scotth/bin/git-branch-name -q -h 12 -b 64) || return
+  #    #echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${ref}${ZSH_THEME_GIT_PROMPT_CLEAN}${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+  #    echo "%{$fg[yellow]%}(${ref})%{$reset_color%}"
+  #}
+  
+  NEWLINE=$'\n'
+  PROMPT='${NEWLINE}%{$fg[magenta]%}${USER}@%m %{$fg_bold[cyan]%}%~%{$reset_color%} %{$fg_bold[yellow]%}$(branch_prompt_info)%{$reset_color%}${NEWLINE}%(?:%{%}➜ :%{%}➜ )'
+  RPROMPT=''
+else
+  echo "run ~/dotfiles/scripts/setup_ohmyzsh.sh"
+fi
 
 # User configuration
+
+if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
+#if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
+if hash bat 2>/dev/null; then alias cat='bat'; fi
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -124,19 +144,18 @@ source $ZSH/oh-my-zsh.sh
 #
 source ~/.aliases
 
-#source ~/zsh-git-prompt/zshrc.sh
-#function git_prompt_info() {
-#    ref=$(/home/scotth/bin/git-branch-name -q -h 12 -b 64) || return
-#    #echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${ref}${ZSH_THEME_GIT_PROMPT_CLEAN}${ZSH_THEME_GIT_PROMPT_SUFFIX}"
-#    echo "%{$fg[yellow]%}(${ref})%{$reset_color%}"
-#}
+alias scrls='screen -list | grep "Detached" | sed -e "s/^.*[0-9]\+\.\([a-zA-Z_0-9\-]\+\).*$/\1/"'
+alias scr='screen -x -R'
 
-NEWLINE=$'\n'
-PROMPT='${NEWLINE}%{$fg[magenta]%}${USER}@%m %{$fg_bold[cyan]%}%~%{$reset_color%} %{$fg_bold[yellow]%}$(branch_prompt_info)%{$reset_color%}${NEWLINE}%(?:%{%}➜ :%{%}➜ )'
-RPROMPT=''
+_scrls() {
+    reply=($(scrls))
+}
+
+# setup completion
+compctl -K _scrls scr
 
 export TMPDIR=/tmp/
-export PAGER=less
+export PAGER='less -FRX'
 export EDITOR='vim'
 export VISUAL='gvim -f'
 
@@ -144,8 +163,8 @@ export GREP_OPTIONS="--color=auto"
 
 export LESS="-iFXR"
 
-#eval "$(SHELL=/bin/bash lesspipe.sh)"
-
 export HOMEBREW_CURLRC=0
 export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
+fpath=(~/.zsh.d/ $fpath)
+fpath=(~/.zsh.d/ $fpath)

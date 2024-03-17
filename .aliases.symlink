@@ -27,10 +27,7 @@ alias l='ls -C'
 alias lsl='ls -al'
 alias lsld='ls -ald'
 alias lslrt='ls -alrt'
-alias df='df -h'
-alias du='du -h'
 
-alias rg='rg -SL'
 alias cht='curl cht.sh'
 
 alias addr='ypcat -k aliases | grep -i'
@@ -48,14 +45,6 @@ alias buffer='free -m | grep buffers/cache | sed -E "s/.* +[0-9]+ +//"'
 
 alias gitnvm='git reset --soft HEAD~1'
 
-alias scrls='screen -list | grep "Detached" | sed -e "s/^.*[0-9]\+\.\([a-zA-Z_0-9\-]\+\).*$/\1/"'
-alias scr='screen -x -R'
-
-function _scrls () {
-   COMPREPLY=( $(compgen -W "`scrls`" -- "${COMP_WORDS[COMP_CWORD]}") )
-}
-
-complete -F _scrls scr
 
 function ka () {
    for i in `ps aux | grep $1 | grep -v grep | awk $'{print \$2}'` ;
