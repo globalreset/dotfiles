@@ -25,6 +25,12 @@ fi
 if [ -x ~/.zsh.d/ ]; then
   export fpath=(~/.zsh.d $fpath)
 fi
+[ -f $(brew --prefix)/etc/profile.d/autojump.sh ] && . $(brew --prefix)/etc/profile.d/autojump.sh
+
+if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
+if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
+if hash bat 2>/dev/null; then alias cat='bat'; fi
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -113,11 +119,6 @@ else
 fi
 
 # User configuration
-
-if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
-if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
-if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd j zsh)"; fi
-if hash bat 2>/dev/null; then alias cat='bat'; fi
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

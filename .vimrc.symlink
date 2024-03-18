@@ -14,7 +14,7 @@ set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
+let mapleader = " "
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -339,7 +339,7 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
-:function s:svnBlame()
+function s:svnBlame()
    let line = line(".")
    setlocal nowrap
    aboveleft 18vnew
@@ -351,18 +351,18 @@ endfunction
    wincmd p
    setlocal scrollbind
    syncbind
-:endfunction
+endfunction
 
-:function s:gitBlame()
+function s:gitBlame()
    belowright 18new
    %!git blame -w "#"
    setlocal nomodified readonly buftype=nofile nowrap winwidth=1
-:endfunction
+endfunction
 
-:map <Leader>s :call <SID>svnBlame()<CR>
-:map <Leader>g :call <SID>gitBlame()<CR>
-:command SvnBlame call s:svnBlame()
-:command GitBlame call s:gitBlame()
+map <Leader>s :call <SID>svnBlame()<CR>
+map <Leader>g :call <SID>gitBlame()<CR>
+command SvnBlame call s:svnBlame()
+command GitBlame call s:gitBlame()
 " add a file explorer to the left
 " lefta vsplit .
 " vertical resize 26
@@ -378,10 +378,9 @@ end
 "command! -bang -nargs=* Find call s:cmd('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 "command! -bang -nargs=* Find 'silent !rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" ' . shellescape(<q-args>) . ' | less -R'
 
-" Remap space and ctrl-space to page up/down in command mode
-map <Space> 
-map <C-Space> 
-map <S-Space> 
+" Remap ctrl+up/down arrow keys to page up/down in command mode
+map <C-Down> 
+map <C-Up> 
 
 " Kill wacky ctrl-space behavior in terminal vim
 imap <Nul> <Space>
