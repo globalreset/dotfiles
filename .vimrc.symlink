@@ -113,9 +113,12 @@ highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE gui
 if has("gui_running")
     set guioptions-=T
     set guioptions-=e
-    "set t_Co=256
     set guitablabel=%M\ %t
-    set guifont=Monospace\ 10
+    try
+      set guifont=UbuntuMono\ Nerd\ Font\ 12
+    catch
+      set guifont="Monospace:h10"
+    endtry
     "set guifont=Sans\ 10
     "set guifont=DejaVu\ Sans\ Mono\ 10
     "set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
