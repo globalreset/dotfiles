@@ -19,9 +19,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    {"nvim-treesitter/nvim-treesitter", event = "BufRead"}, -- Syntax highlighting
-    {"junegunn/fzf", event = "BufRead"}, -- Fuzzy finder
+    {'nvim-treesitter/nvim-treesitter', event = 'BufRead'}, -- Syntax highlighting
+    {'junegunn/fzf', event = 'BufRead'}, -- Fuzzy finder
+    {'junegunn/fzf.vim', event = 'BufRead'}, -- Fuzzy finder
     --{'github/copilot.vim'},
+
+    {'vhda/verilog_systemverilog.vim'},
+    {'tweekmonster/wstrip.vim'},
+    {'itchyny/lightline.vim'},
 
     {'neovim/nvim-lspconfig'},
     --{'hrsh7th/cmp-nvim-lsp'},
@@ -42,14 +47,12 @@ require("lazy").setup({
     --{'nvim-telescope/telescope-project.nvim'},
     --{'nvim-telescope/telescope-packer.nvim'},
     --{'nvim-telescope/telescope-symbols.nvim'},
-    {'scrooloose/nerdtree', event = "BufRead"},
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+
+    {'scrooloose/nerdtree', event = 'BufRead'},
+    { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+
     --{'tweekmonster/wstrip.vim'},
-    --'junegunn/fzf'},
-    --{'junegunn/fzf.vim'},
     --{'jeetsukumaran/vim-buffergator'},
-    {'itchyny/lightline.vim'},
-    --{'vhda/verilog_systemverilog.vim'},
     --{'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }},
     -- Add more plugins here
 })

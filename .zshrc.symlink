@@ -9,10 +9,12 @@ if [ -f ~/.zshrc.local ]; then
   source ~/.zshrc.local
 fi
 
-if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ -f ~/.linuxbrew/bin/brew ]; then
+if [ -f ~/.linuxbrew/bin/brew ]; then
   eval "$(~/.linuxbrew/bin/brew shellenv)"
+elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ -f /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 if hash brew 2>/dev/null; then 

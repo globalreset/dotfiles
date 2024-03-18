@@ -371,14 +371,12 @@ if !empty(glob('~/.linuxbrew/opt/fzf'))
   set rtp+=~/.linuxbrew/opt/fzf
 elseif !empty(glob('/home/linuxbrew/.linuxbrew/opt/fzf'))
   set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
+elseif !empty(glob('/usr/local/opt/fzf'))
+  set rtp+=/usr/local/opt/fzf
 end
 
 "command! -bang -nargs=* Find call s:cmd('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 "command! -bang -nargs=* Find 'silent !rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" ' . shellescape(<q-args>) . ' | less -R'
-
-map <Leader>f :FZF<CR>
-
-map <F2> :NERDTreeToggle<CR>
 
 " Remap space and ctrl-space to page up/down in command mode
 map <Space> 
@@ -421,3 +419,10 @@ call plug#begin('~/.vim/plugged')
   "Plug 'zivyangll/git-blame.vim'
   "nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
 call plug#end()
+
+map <Leader>f :Files<CR>
+map <Leader>b :Buffers<CR>
+map <Leader>r :RG<CR>
+
+map <F2> :NERDTreeToggle<CR>
+
