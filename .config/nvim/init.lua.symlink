@@ -39,7 +39,7 @@ require("lazy").setup({
 
     {'nvim-lua/plenary.nvim'},
     {'nvim-lua/popup.nvim'},
-    --{'nvim-telescope/telescope.nvim'},
+    {'nvim-telescope/telescope.nvim'},
     --{'nvim-telescope/telescope-fzf-native.nvim'},
     --{'nvim-telescope/telescope-media-files.nvim'},
     --{'nvim-telescope/telescope-frecency.nvim'},
@@ -152,3 +152,9 @@ vim.cmd([[
     endif
   endif
 ]])
+
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
