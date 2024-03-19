@@ -1,7 +1,8 @@
 mkdir -p ~/.local/share/fonts
 cd ~/.local/share/fonts
 
-for f in FiraCode UbuntuMono; do
+# can't decide yet between these four
+for f in FiraMono Inconsolata FiraCode UbuntuMono; do
   (
     mkdir -p $f &&
     cd $f &&

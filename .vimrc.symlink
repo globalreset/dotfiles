@@ -192,6 +192,7 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+map <C-c> <C-W>c
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
@@ -204,7 +205,18 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext<cr>
+map <leader>t  :tabnext<cr>
+
+map <leader>t0 :tabn 0<cr>
+map <leader>t1 :tabn 1<cr>
+map <leader>t2 :tabn 2<cr>
+map <leader>t3 :tabn 3<cr>
+map <leader>t4 :tabn 4<cr>
+map <leader>t5 :tabn 5<cr>
+map <leader>t6 :tabn 6<cr>
+map <leader>t7 :tabn 7<cr>
+map <leader>t8 :tabn 8<cr>
+map <leader>t9 :tabn 9<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -219,7 +231,7 @@ map <leader>te :tabedit <C-r>=escape(expand("%:p:h"), " ")<cr>/
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 map <leader>q :qall!<cr>
-map <leader>, :qall!<cr>
+
 " Specify the behavior when switching between buffers
 try
   set switchbuf=useopen,usetab,newtab
