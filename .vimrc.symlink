@@ -354,30 +354,30 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
-function s:svnBlame()
-   let line = line(".")
-   setlocal nowrap
-   aboveleft 18vnew
-   %!svn blame -x-w "#"
-   setlocal nomodified readonly buftype=nofile nowrap winwidth=1
-   "setlocal nonumber
-   exec "normal " . line . "G"
-   setlocal scrollbind
-   wincmd p
-   setlocal scrollbind
-   syncbind
-endfunction
-
-function s:gitBlame()
-   belowright 18new
-   %!git blame -w "#"
-   setlocal nomodified readonly buftype=nofile nowrap winwidth=1
-endfunction
-
-map <Leader>s :call <SID>svnBlame()<CR>
-map <Leader>g :call <SID>gitBlame()<CR>
-command SvnBlame call s:svnBlame()
-command GitBlame call s:gitBlame()
+" function s:svnBlame()
+"    let line = line(".")
+"    netlocal nowrap
+"    aboveleft 18vnew
+"    %!svn blame -x-w "#"
+"    setlocal nomodified readonly buftype=nofile nowrap winwidth=1
+"    "setlocal nonumber
+"    exec "normal " . line . "G"
+"    setlocal scrollbind
+"    wincmd p
+"    setlocal scrollbind
+"    syncbind
+" endfunction
+"
+" function s:gitBlame()
+"    belowright 18new
+"    %!git blame -w "#"
+"    setlocal nomodified readonly buftype=nofile nowrap winwidth=1
+" endfunction
+"
+" map <Leader>s :call <SID>svnBlame()<CR>
+" map <Leader>g :call <SID>gitBlame()<CR>
+" command SvnBlame call s:svnBlame()
+" command GitBlame call s:gitBlame()
 " add a file explorer to the left
 " lefta vsplit .
 " vertical resize 26
@@ -400,7 +400,7 @@ map <C-Up> 
 " Kill wacky ctrl-space behavior in terminal vim
 imap <Nul> <Space>
 " Remap ctrl-space to ^N (completion) in insertion mode
-imap <C-Space> 
+"imap <C-Space> 
 
 " Make p in Visual mode replace the selected text with the "" register.
 vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
