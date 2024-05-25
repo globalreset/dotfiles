@@ -115,7 +115,12 @@ if has("gui_running")
     set guioptions-=e
     set guitablabel=%M\ %t
     try
-      set guifont=UbuntuMono\ Nerd\ Font\ 12
+      "set guifont=UbuntuMono\ Nerd\ Font\ 12
+      if has("nvim")
+        set guifont=UbuntuMono\ Nerd\ Font:h12
+      else
+        set guifont=UbuntuMono\ Nerd\ Font\ 12
+      endif
     catch
       set guifont="Monospace:h10"
     endtry
