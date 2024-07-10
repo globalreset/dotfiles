@@ -409,6 +409,7 @@ imap <Nul> <Space>
 
 " Make p in Visual mode replace the selected text with the "" register.
 vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+xnoremap "<Leader>p" "\"_dP"
 
 inoremap jk <Esc>
 

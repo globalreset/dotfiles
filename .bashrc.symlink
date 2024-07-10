@@ -89,7 +89,3 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-if [ -f ~/.savvy/bin/savvy ]; then
-  export PATH=~/.savvy/bin/:$PATH
-  eval "$(savvy init bash)"
-fi

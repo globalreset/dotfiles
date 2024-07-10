@@ -86,23 +86,15 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 if [ -f ~/.p10k.zsh ]; then 
   source ~/.p10k.zsh
 fi
-
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
 if hash bat 2>/dev/null; then alias cat='bat'; fi
-
 if hash fzf 2>/dev/null; then eval "$(fzf --zsh)"; fi 
 #export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
-
-if [ -f ~/.savvy/bin/savvy ]; then
-  export PATH=~/.savvy/bin/:$PATH
-  eval "$(savvy init bash)"
-fi
-
+source ~/.aliases
 # load completions
 autoload -U compinit && compinit
 
 zinit cdreplay -q
 
-source ~/.aliases
