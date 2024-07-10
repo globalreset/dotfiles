@@ -1,32 +1,10 @@
+
+export username=$USER
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# zinit setup
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
-
-# prompt
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-
-# Plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light softmoth/zsh-vim-mode
-zinit light Aloxaf/fzf-tab
-
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::command-not-found
-
-if [ -f ~/.zshrc.local ]; then
-  source ~/.zshrc.local
 fi
 
 if [ -f ~/.linuxbrew/bin/brew ]; then
@@ -44,6 +22,30 @@ fi
 if [ -x ~/.zsh.d/ ]; then
   export fpath=(~/.zsh.d $fpath)
 fi
+# zinit setup
+zmodload zsh/zutil
+autoload -Uz is-at-least
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+
+# prompt
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light softmoth/zsh-vim-mode
+zinit light Aloxaf/fzf-tab
+
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
+
 
 # keybindings
 bindkey '^[[A' history-search-backward
@@ -98,3 +100,6 @@ autoload -U compinit && compinit
 
 zinit cdreplay -q
 
+if [ -f ~/.zshrc.local ]; then
+  source ~/.zshrc.local
+fi
