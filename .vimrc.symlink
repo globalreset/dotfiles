@@ -14,7 +14,7 @@ set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = " "
+let mapleader = ";"
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -402,10 +402,14 @@ end
 map <C-Down> 
 map <C-Up> 
 
+nmap <Space> 
+nmap <C-Space> 
+
 " Kill wacky ctrl-space behavior in terminal vim
-imap <Nul> <Space>
+"imap <Nul> <Space>
 " Remap ctrl-space to ^N (completion) in insertion mode
-"imap <C-Space> 
+imap <C-Space> 
+imap <S-Tab> 
 
 " Make p in Visual mode replace the selected text with the "" register.
 vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
