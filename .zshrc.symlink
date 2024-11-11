@@ -15,7 +15,7 @@ elif [ -f /usr/local/bin/brew ]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-if hash brew 2>/dev/null; then 
+if hash brew 2>/dev/null; then
   export fpath=($(brew --prefix)/share/zsh/functions $(brew --prefix)/share/zsh/site-functions $fpath)
 fi
 
