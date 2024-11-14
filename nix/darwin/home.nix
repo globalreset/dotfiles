@@ -40,6 +40,9 @@ in {
 
       gh = {
          enable = true;
+         extensions = [
+            pkgs.gh-copilot
+         ];
          settings = {
             # Use SSH for git operations
             git_protocol = "ssh";
