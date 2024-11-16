@@ -90,7 +90,7 @@
     username = "shughes";
     
     # Function to create a base Darwin configuration
-    mkDarwinConfig = { system, hostname }: let
+    mkDarwinConfig = { system, hostname, extraCasks ? [] }: let
       add-unstable-packages = final: _prev: {
         unstable = import inputs.nixpkgs-unstable {
           system = "${system}";
@@ -219,21 +219,19 @@
           homebrew = {
             enable = true;
             casks = [
+              "arc"
+              "chatgpt"
+              "claude"
               "discord"
               "firefox"
               "microsoft-teams"
               "obsidian"
+              "orbstack"
               "slack"
               "the-unarchiver"
               "visual-studio-code"
-              # Uncomment any of these if you want them back
-              # "hammerspoon"
-              # "amethyst"
-              # "alfred"
-              # "logseq"
-              # "notion"
-              # "iina"
-            ];
+              "warp"
+            ] ++ extraCasks;
             onActivation = {
               autoUpdate = true;
               cleanup = "zap";
@@ -245,19 +243,20 @@
     };
   in {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
+    # $ darwin-rebuild build --flake .
     darwinConfigurations = {
       # M4 Mac Mini (2024)
       "MacMiniM4" = mkDarwinConfig {
         system = "aarch64-darwin";
         hostname = "MacMiniM4";
+        extraCasks = [ "adobe-creative-cloud" ];
       };
       
       # Add more machines here
-      # "OtherMac" = mkDarwinConfig {
-      #   system = "aarch64-darwin";
-      #   hostname = "OtherMac";
-      # };
+      "OtherMac" = mkDarwinConfig {
+        system = "aarch64-darwin";
+        hostname = "OtherMac";
+      };
     };
 
     # Expose the package set, including overlays, for convenience.
