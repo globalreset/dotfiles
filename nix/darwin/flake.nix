@@ -104,9 +104,17 @@
           nixpkgs.config.allowUnfree = true;
           nixpkgs.overlays = [ add-unstable-packages ];
           
+          # Enable fonts
+          fonts.packages = [
+            (pkgs.nerdfonts.override {
+              fonts = [ "FiraMono" "Inconsolata" "FiraCode" "UbuntuMono" ];
+            })
+          ];
+
           environment.systemPackages = [
             pkgs._1password-cli
             pkgs.bat
+            pkgs.eza
             pkgs.fd
             pkgs.fzf
             pkgs.gh
@@ -126,11 +134,6 @@
             ]))
             pkgs.tmux
             pkgs.zoxide
-
-            # Fonts
-            (pkgs.nerdfonts.override {
-              fonts = [ "FiraMono" "Inconsolata" "FiraCode" "UbuntuMono" ];
-            })
           ];
 
           users.users.${username} = {
@@ -213,7 +216,7 @@
               "homebrew/homebrew-cask" = homebrew-cask;
               "homebrew/homebrew-bundle" = homebrew-bundle;
             };
-            mutableTaps = false;
+            mutableTaps = true;
           };
 
           homebrew = {
@@ -224,6 +227,7 @@
               "claude"
               "discord"
               "firefox"
+              "google-chrome"
               "microsoft-teams"
               "obsidian"
               "orbstack"
@@ -231,6 +235,7 @@
               "the-unarchiver"
               "visual-studio-code"
               "warp"
+              "wezterm"
             ] ++ extraCasks;
             onActivation = {
               autoUpdate = true;
