@@ -18,6 +18,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
 require("lazy").setup({
   { 'catppuccin/nvim', name = 'catppuccin', priority = 1000, 
     opts = {
@@ -219,7 +220,19 @@ require("lazy").setup({
 
   --{'junegunn/fzf', event = 'BufRead'}, -- Fuzzy finder
   --{'junegunn/fzf.vim', event = 'BufRead'}, -- Fuzzy finder
-  {'github/copilot.vim'},
+ {
+    "github/copilot.vim",
+    lazy = false,
+    config = function()
+      -- You can configure Copilot here
+      -- Mapping tab is already used by NvChad
+      --vim.g.copilot_no_tab_map = true;
+      --vim.g.copilot_assume_mapped = true;
+      --vim.g.copilot_tab_fallback = "";
+      -- The mapping is set to other key, see custom/lua/mappings
+      -- or run <leader>ch to see copilot mapping section
+    end
+  },
 
   --{'vhda/verilog_systemverilog.vim'},
   {'tweekmonster/wstrip.vim'},
@@ -548,6 +561,26 @@ require("lazy").setup({
     end,
   },
 
+  {
+   "kdheepak/lazygit.nvim",
+   cmd = {
+    "LazyGit",
+    "LazyGitConfig",
+    "LazyGitCurrentFile",
+    "LazyGitFilter",
+    "LazyGitFilterCurrentFile",
+   },
+   -- optional for floating window border decoration
+   dependencies = {
+    "nvim-lua/plenary.nvim",
+   },
+   -- setting the keybinding for LazyGit with 'keys' is recommended in
+   -- order to load the plugin when the command is run for the first time
+   keys = {
+    { "<leader>lg", "<cmd>LazyGit<cr>", desc = "Open lazy git" },
+   },
+  }
+
   --{'tweekmonster/wstrip.vim'},
   --{'jeetsukumaran/vim-buffergator'},
   --{'godlygeek/tabular', { 'on': ['Tab', 'Tabularize'] }},
@@ -656,3 +689,4 @@ vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+
