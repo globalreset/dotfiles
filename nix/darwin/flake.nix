@@ -121,6 +121,7 @@
             pkgs.gh-copilot
             pkgs.git
             pkgs.iperf
+            pkgs.lazygit
             pkgs.mkalias
             pkgs.neofetch
             pkgs.neovim
@@ -134,6 +135,7 @@
             ]))
             pkgs.tmux
             pkgs.zoxide
+            pkgs.z3
           ];
 
           users.users.${username} = {
@@ -223,11 +225,13 @@
             enable = true;
             casks = [
               "arc"
+              "balenaetcher"
               "chatgpt"
               "claude"
               "discord"
               "firefox"
               "google-chrome"
+              "iina"
               "microsoft-teams"
               "obsidian"
               "orbstack"
