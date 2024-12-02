@@ -134,6 +134,7 @@
               pkgs.rubyPackages_3_3.solargraph
             ]))
             pkgs.tmux
+            pkgs.zellij
             pkgs.zoxide
             pkgs.z3
           ];
