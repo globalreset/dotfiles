@@ -50,4 +50,29 @@ function ka () {
 
 function f() { fd -iIH "$1" "${@:2}"; }
 
+alias lvim='NVIM_APPNAME=lazyvim nvim'
+
+alias copilot='copilot \
+     --allow-all-urls \
+     --allow-all-paths \
+     --allow-tool "read" \
+     --allow-tool "shell(cd:*)" \
+     --allow-tool "shell(ls:*)" \
+     --allow-tool "shell(find:*)" \
+     --allow-tool "shell(fd:*)" \
+     --allow-tool "shell(grep:*)" \
+     --allow-tool "shell(rg:*)" \
+     --allow-tool "shell(head:*)" \
+     --allow-tool "shell(tail:*)" \
+     --allow-tool "shell(git log:*)" \
+     --allow-tool "shell(git show:*)" \
+     --allow-tool "shell(git diff:*)" \
+     --allow-tool "shell(gh:*)" \
+     --allow-tool "shell(sed:*)" \
+     --allow-tool "shell(awk:*)" \
+     --allow-tool "shell(rake:*)" \
+     --deny-tool "shell(git push:*)" \
+     --deny-tool "shell(git commit:*)" \
+     --deny-tool "shell(git merge:*)" \
+     --deny-tool "shell(git rebase:*)"'
 

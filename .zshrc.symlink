@@ -89,16 +89,28 @@ if [ -f ~/.p10k.zsh ]; then
 fi
 if hash dircolors 2>/dev/null; then eval "$(dircolors -b)"; fi
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
-if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+#if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
 if hash bat 2>/dev/null; then alias cat='bat'; fi
-if hash fzf 2>/dev/null; then eval "$(fzf --zsh)"; fi 
+if hash fzf 2>/dev/null; then 
+  eval "$(fzf --zsh)";
+  export FZF_DEFAULT_OPTS="
+    --preview 'if [[ -d {} ]]; then ls -la {}; 
+               elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {};
+               else echo \"(no preview)\"; fi'
+    --preview-window 'right:60%'
+  "
+  export FZF_CTRL_R_OPTS="--no-preview"
+
+fi
 #export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
 source ~/.aliases
 # load completions
 autoload -U compinit && compinit
 
 zinit cdreplay -q
+
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 if [ -f ~/.zshrc.local ]; then
   source ~/.zshrc.local

@@ -28,12 +28,12 @@ set editing-mode vi
 # Note to get rid of a line just Ctrl-C
 "\e[B": history-search-forward
 "\e[A": history-search-backward
- 
+
 $if Bash
   # F10 toggles mc on and off
   # Note Ctrl-o toggles panes on and off in mc
   "\e[21~": "mc\C-M"
- 
+
   #do history expansion when space entered
   Space: magic-space
 
@@ -44,6 +44,7 @@ $if Bash
   set show-all-if-ambiguous on
   set mark-directories on
   set mark-symlinked-directories on
+  set enable-bracketed-paste on
 
 $endif
  
