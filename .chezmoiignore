@@ -1,0 +1,10 @@
+# Ignore nix/darwin on non-macOS
+{{ if ne .chezmoi.os "darwin" }}
+nix/
+{{ end }}
+
+# Repo files that aren't dotfiles
+README.md
+Brewfile
+plan.md
+scripts/

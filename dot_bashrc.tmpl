@@ -1,0 +1,131 @@
+
+# Permission Format: Owner(r/w/x)/Group/Others.
+#   File Permission: If (umask bit == 1) then no permission
+#   Example: 022 = Owner (r=0/w=0/x=0 => all on), Group & Others (r=0/w=1/x=0 => can't write)
+umask 022
+
+_extra_paths=(
+{{ range .extra_paths -}}
+  "{{ . }}"
+{{ end -}}
+)
+for _p in "${_extra_paths[@]}"; do
+  case ":$PATH:" in *":$_p:"*) ;; *) PATH=$_p:$PATH ;; esac
+done
+unset _p _extra_paths
+export PATH
+
+{{ if .has_linuxbrew -}}
+if ! hash brew 2>/dev/null; then
+  eval "$({{ .linuxbrew_prefix }}/bin/brew shellenv)"
+fi
+{{ end -}}
+
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# Don't wait for job termination notification
+set -o notify
+# Don't use ^D to exit
+set -o ignoreeof
+set -o vi
+
+# Don't put duplicate lines in the history.
+export HISTCONTROL=erasedups
+export HISTFILESIZE=100000
+export HISTSIZE=50000
+
+shopt -s histappend    # append to history file instead of overwriting
+shopt -s histreedit    # re-edit failed history substitutions
+shopt -s checkwinsize  # update LINES/COLUMNS after each command
+shopt -s cdspell       # autocorrect minor typos in cd arguments
+shopt -s lithist       # preserve newlines in history instead of semicolons
+shopt -s nocaseglob    # case-insensitive pathname expansion
+
+export LS_COLORS="no=00:fi=00:di=01;36:ln=01;35:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:"
+
+export INPUTRC="~/.inputrc"
+export TMPDIR=/tmp/
+export PAGER='less'
+export EDITOR='vim'
+export LESS="-iFXR"
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
+if hash neovide 2>/dev/null; then
+  export VISUAL='neovide --no-fork'
+elif hash gvim 2>/dev/null; then
+  export VISUAL='gvim -f'
+else
+  export VISUAL='vim'
+fi
+
+parse_git_branch() {
+  git rev-parse --is-inside-work-tree &>/dev/null || return
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null || \
+           git describe --tags --exact-match 2>/dev/null || \
+           git rev-parse --short HEAD 2>/dev/null)
+  [ -n "$branch" ] && echo " [$branch]"
+}
+
+export PS1="\\[\\033]0;\\w\\007\n\\033[32m\\]\\u@\\h \\[\\033[33m\\w\\033[0m\\] \$(parse_git_branch) \n$ "
+PS2='> '
+PS4='+ '
+
+# Sync history across sessions - set before any other tool (like zoxide) that may update PROMPT_COMMAND
+PROMPT_COMMAND="history -a; history -n"
+
+source ~/.aliases
+
+alias scrls='screen -list | grep "Detached" | sed -e "s/^.*[0-9]\+\.\([a-zA-Z_0-9\-]\+\).*$/\1/"'
+alias scr='screen -x -R'
+
+function _scrls () {
+   COMPREPLY=( $(compgen -W "`scrls`" -- "${COMP_WORDS[COMP_CWORD]}") )
+}
+
+complete -F _scrls scr
+
+complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
+
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion 2>/dev/null
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion 2>/dev/null
+  fi
+fi
+
+{{ if .has_linuxbrew -}}
+if [[ $- == *i* ]] && type brew &>/dev/null; then
+   HOMEBREW_PREFIX="$(brew --prefix)"
+   for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+      [[ -r "$COMPLETION" ]] && source "$COMPLETION"
+   done
+fi
+{{ end -}}
+
+
+{{ if .has_modules -}}
+# Environment Modules
+source {{ .modules_init }}/bash
+{{ range .modules_to_load -}}
+module load {{ . }} 2>&1 >/dev/null
+{{ end -}}
+{{ end -}}
+
+
+if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
+if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
+if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
+if hash fzf 2>/dev/null; then
+  eval "$(fzf --bash)"
+  export FZF_DEFAULT_OPTS="--preview 'if [[ -d {} ]]; then ls -la {}; elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {}; else echo \"(no preview)\"; fi' --preview-window 'right:60%'"
+  export FZF_CTRL_R_OPTS="--no-preview"
+fi
+
+{{ range $k, $v := .extra_env -}}
+export {{ $k }}={{ $v }}
+{{ end -}}

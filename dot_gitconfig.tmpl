@@ -1,0 +1,70 @@
+[user]
+	name = Scott Hughes
+	email = {{ .git_email }}
+[init]
+	defaultBranch = main
+[core]
+	editor = vim
+#   pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta
+	preloadIndex = true
+	autocrlf = input
+{{ if eq .hostname_class "work" -}}
+[safe]
+	directory = /projects/asic/user/
+{{ end -}}
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = true
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[rebase]
+	autosquash = true
+	autoStash = true
+	stat = true
+[fetch]
+	prune = true
+[merge]
+	conflictStyle = zdiff3
+	verbosity = 5
+[interactive]
+	diffFilter = delta --color-only
+	#diffFilter = diff-so-fancy --patch
+[diff "pandoc"]
+	textconv=pandoc --to=markdown
+	prompt = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[delta]
+	navigate = true  # use n and N to move between diff sections
+	true-color = always
+	line-numbers = true
+#	side-by-side = true
+[alias]
+	dlog = -c diff.external=difft log --ext-diff
+	dshow = -c diff.external=difft show --ext-diff
+	ddiff = -c diff.external=difft diff
+	bls = for-each-ref --format='%(color:cyan)%(authordate:format:%m/%d/%Y %I:%M %p)    %(align:25,left)%(color:yellow)%(authorname)%(end) %(color:reset)%(refname:strip=3)' --sort=authordate refs/remotes
+	up = !echo 'git pull --all' && git pull --all && echo 'git merge origin/main' && git merge origin/main
+	wdiff = diff --word-diff=color --unified=1`
+	sl = branchless smartlog
+	rmbranch = !git branch --merged origin/main | grep -vE '^[^ ] |main' | xargs git branch -d
+	slog = log --pretty=format:\"%C(green)%h %C(brightblue)%<(15,trunc)%an%C(red)%>(13)%ar %Creset%s\"
+[credential]
+	helper = store
+[credential "https://github.com"]
+	helper = !{{ if .has_linuxbrew }}{{ .linuxbrew_prefix }}/bin/{{ end }}gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !{{ if .has_linuxbrew }}{{ .linuxbrew_prefix }}/bin/{{ end }}gh auth git-credential
+{{ if eq .hostname_class "work" -}}
+[credential "https://github.adtran.com"]
+	helper =
+	helper = !{{ .linuxbrew_prefix }}/bin/gh auth git-credential
+{{ end -}}

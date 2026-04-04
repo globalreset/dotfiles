@@ -585,7 +585,7 @@ vim.cmd.colorscheme "catppuccin"
 
 vim.opt.termguicolors = true
 vim.opt.clipboard= "unnamedplus"
-vim.lsp.set_log_level("debug")
+vim.lsp.log.set_level("WARN")
 
 --require'lspconfig'.svls.setup{
 --    -- Add any configuration options here

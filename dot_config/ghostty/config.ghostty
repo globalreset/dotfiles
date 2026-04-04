@@ -1,0 +1,30 @@
+# Catppuccin Mocha-inspired, but with a darker background and brighter text.
+font-family = UbuntuMono Nerd Font Mono
+font-size = 14
+window-padding-x = 8
+window-padding-y = 6
+window-inherit-working-directory = true
+
+background = #0f111b
+foreground = #eef3ff
+
+cursor-color = #89b4fa
+selection-background = #243247
+selection-foreground = #f5f7ff
+
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#d8e0ff
+palette = 8=#626880
+palette = 9=#ff9eb8
+palette = 10=#b7f7b2
+palette = 11=#ffe9bc
+palette = 12=#9cc3ff
+palette = 13=#ffd2ef
+palette = 14=#a8f1e6
+palette = 15=#f5f7ff

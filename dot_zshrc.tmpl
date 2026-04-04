@@ -1,5 +1,18 @@
 
 export username=$USER
+export SHELL=$(which zsh)
+
+_extra_paths=(
+{{ range .extra_paths -}}
+  "{{ . }}"
+{{ end -}}
+)
+for _p in "${_extra_paths[@]}"; do
+  case ":$PATH:" in *":$_p:"*) ;; *) PATH=$_p:$PATH ;; esac
+done
+unset _p _extra_paths
+export PATH
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -7,17 +20,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-if [ -f ~/.linuxbrew/bin/brew ]; then
-  eval "$(~/.linuxbrew/bin/brew shellenv)"
-elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ -f /usr/local/bin/brew ]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+{{ if .has_linuxbrew -}}
+if ! hash brew 2>/dev/null; then
+  eval "$({{ .linuxbrew_prefix }}/bin/brew shellenv)"
 fi
-
-if hash brew 2>/dev/null; then
-  export fpath=($(brew --prefix)/share/zsh/functions $(brew --prefix)/share/zsh/site-functions $fpath)
-fi
+export fpath=({{ .linuxbrew_prefix }}/share/zsh/functions {{ .linuxbrew_prefix }}/share/zsh/site-functions $fpath)
+{{ end -}}
 
 if [ -x ~/.zsh.d/ ]; then
   export fpath=(~/.zsh.d $fpath)
@@ -80,11 +88,13 @@ compctl -K _scrls scr
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':fzf-tab:complete:*:*' fzf-preview \
+  'if [[ -d $realpath ]]; then ls --color=always $realpath; elif [[ -f $realpath ]]; then bat --color=always --style=header,grid --line-range :300 $realpath; fi'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-if [ -f ~/.p10k.zsh ]; then 
+if [ -f ~/.p10k.zsh ]; then
   source ~/.p10k.zsh
 fi
 if hash dircolors 2>/dev/null; then eval "$(dircolors -b)"; fi
@@ -92,27 +102,41 @@ if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 #if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
 if hash bat 2>/dev/null; then alias cat='bat'; fi
-if hash fzf 2>/dev/null; then 
-  eval "$(fzf --zsh)";
-  export FZF_DEFAULT_OPTS="
-    --preview 'if [[ -d {} ]]; then ls -la {}; 
-               elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {};
-               else echo \"(no preview)\"; fi'
-    --preview-window 'right:60%'
-  "
+if hash fzf 2>/dev/null; then
+  eval "$(fzf --zsh)"
+  export FZF_DEFAULT_OPTS="--preview 'if [[ -d {} ]]; then ls -la {}; elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {}; else echo \"(no preview)\"; fi' --preview-window 'right:60%'"
   export FZF_CTRL_R_OPTS="--no-preview"
-
 fi
-#export FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
+export EDITOR='vim'
+if hash neovide 2>/dev/null; then
+  export VISUAL='neovide --no-fork'
+elif hash gvim 2>/dev/null; then
+  export VISUAL='gvim -f'
+else
+  export VISUAL='vim'
+fi
+
 source ~/.aliases
+
 # load completions
 autoload -U compinit && compinit
 
 zinit cdreplay -q
 
-export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+{{ if .has_modules -}}
+# Environment Modules
+source {{ .modules_init }}/zsh
+{{ range .modules_to_load -}}
+module load {{ . }} 2>&1 >/dev/null
+{{ end -}}
+{{ end -}}
 
-if [ -f ~/.zshrc.local ]; then
-  source ~/.zshrc.local
-fi
+{{ range $k, $v := .zsh_named_dirs -}}
+hash -d {{ $k }}="{{ $v }}"
+{{ end -}}
 
+{{ range $k, $v := .extra_env -}}
+export {{ $k }}={{ $v }}
+{{ end -}}

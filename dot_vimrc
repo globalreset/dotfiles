@@ -113,7 +113,9 @@ highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE gui
 if has("gui_running")
     set guioptions-=T
     set guioptions-=e
-    set guitablabel=%M\ %t
+    if !has("nvim")
+      set guitablabel=%M\ %t
+    endif
     try
       "set guifont=UbuntuMono\ Nerd\ Font\ 12
       if has("nvim")
