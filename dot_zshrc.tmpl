@@ -133,10 +133,14 @@ module load {{ . }} 2>&1 >/dev/null
 {{ end -}}
 {{ end -}}
 
+{{ if hasKey . "zsh_named_dirs" -}}
 {{ range $k, $v := .zsh_named_dirs -}}
 hash -d {{ $k }}="{{ $v }}"
 {{ end -}}
+{{ end -}}
 
+{{ if hasKey . "extra_env" -}}
 {{ range $k, $v := .extra_env -}}
 export {{ $k }}={{ $v }}
+{{ end -}}
 {{ end -}}

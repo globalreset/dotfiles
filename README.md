@@ -4,11 +4,31 @@ Managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Setup on a new machine
 
-```bash
-chezmoi init https://github.com/<you>/dotfiles.git
-vim ~/.config/chezmoi/chezmoi.toml   # set machine-specific template data
-chezmoi apply
-```
+1. Clone the repo (skip if you already have it):
+
+   ```bash
+   git clone https://github.com/globalreset/dotfiles.git ~/dotfiles
+   ```
+
+2. Tell chezmoi to use `~/dotfiles` as the source directory and set
+   machine-specific template data:
+
+   ```bash
+   vim ~/.config/chezmoi/chezmoi.toml
+   ```
+
+   ```toml
+   sourceDir = "/home/<you>/dotfiles"
+
+   [data]
+     # see "Custom variables" section below
+   ```
+
+3. Apply:
+
+   ```bash
+   chezmoi apply
+   ```
 
 ## Day-to-day
 
@@ -176,3 +196,33 @@ directory which differs per machine.
    chezmoi cat ~/.config/tool/config   # check rendered output
    chezmoi apply -v
    ```
+
+## Sample chezmoi.toml
+
+```toml
+sourceDir = "/home/shughes/dotfiles"
+
+[data]
+  hostname_class = "work_wsl" # "work" | "work_wsl" | "personal" | "server"
+  git_email = "scott.hughes@adtran.com"
+
+  # Homebrew / linuxbrew
+  has_linuxbrew = true
+  linuxbrew_prefix = "/home/linuxbrew/.linuxbrew"
+
+  # Environment modules
+  has_modules = true
+  modules_init = "/usr/share/modules/init/"
+  modules_to_load = [""]
+
+  # PATH additions (order matters — first entry is highest priority)
+  extra_paths = [
+    "$HOME/.local/bin",
+    "$HOME/bin",
+  ]
+
+  # Machine-specific environment variables
+  [data.extra_env]
+    MODULES_AUTO_HANDLING = "1"
+    MODULES_CONFLICT_UNLOAD = "1"
+```
