@@ -126,6 +126,8 @@ if hash fzf 2>/dev/null; then
   export FZF_CTRL_R_OPTS="--no-preview"
 fi
 
+{{ if hasKey . "extra_env" -}}
 {{ range $k, $v := .extra_env -}}
 export {{ $k }}={{ $v }}
+{{ end -}}
 {{ end -}}
