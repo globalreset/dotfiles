@@ -32,8 +32,8 @@ set -o notify
 set -o ignoreeof
 set -o vi
 
-# Don't put duplicate lines in the history.
-export HISTCONTROL=erasedups
+# Don't put duplicate lines or lines starting with space in the history.
+export HISTCONTROL=ignoreboth
 export HISTFILESIZE=100000
 export HISTSIZE=50000
 
@@ -121,7 +121,16 @@ if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd bash)"; fi
 if hash fzf 2>/dev/null; then
-  eval "$(fzf --bash)"
+  if fzf --bash &>/dev/null 2>&1; then
+    # fzf 0.48+
+    eval "$(fzf --bash)"
+  else
+    # Older fzf — source scripts directly
+    # Debian/Ubuntu package paths
+    [[ -f /usr/share/bash-completion/completions/fzf ]] && source /usr/share/bash-completion/completions/fzf
+    [[ -f /usr/share/doc/fzf/examples/key-bindings.bash ]] && source /usr/share/doc/fzf/examples/key-bindings.bash
+  fi
+
   export FZF_DEFAULT_OPTS="--preview 'if [[ -d {} ]]; then ls -la {}; elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {}; else echo \"(no preview)\"; fi' --preview-window 'right:60%'"
   export FZF_CTRL_R_OPTS="--no-preview"
 fi
