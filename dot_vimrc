@@ -117,7 +117,6 @@ if has("gui_running")
       set guitablabel=%M\ %t
     endif
     try
-      "set guifont=UbuntuMono\ Nerd\ Font\ 12
       if has("nvim")
         set guifont=UbuntuMono\ Nerd\ Font:h12
       else
@@ -451,4 +450,3 @@ map <Leader>b :Buffers<CR>
 map <Leader>r :RG<CR>
 
 map <F2> :NERDTreeToggle<CR>
-
