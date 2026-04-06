@@ -4,13 +4,15 @@ Managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Setup on a new machine
 
-1. Clone the repo (skip if you already have it):
+**One-liner** (clones the repo to `~/dotfiles` and initializes chezmoi):
 
-   ```bash
-   git clone https://github.com/globalreset/dotfiles.git ~/dotfiles
-   ```
+```bash
+chezmoi init --source ~/dotfiles https://github.com/globalreset/dotfiles.git
+```
 
-2. Tell chezmoi to use `~/dotfiles` as the source directory and set
+If you already have the repo cloned at `~/dotfiles`, skip to step 1.
+
+1. Tell chezmoi to use `~/dotfiles` as the source directory and set
    machine-specific template data:
 
    ```bash
@@ -38,6 +40,23 @@ chezmoi diff              # preview what would change
 chezmoi apply             # deploy changes to ~
 chezmoi cd                # cd into the source repo for git operations
 ```
+
+## Absorbing local changes
+
+If something modified a managed file outside of chezmoi (e.g. a script appended
+to your `.bashrc`), you can pull those changes back into the source state:
+
+```bash
+# Static (non-template) files — re-add all modified files at once
+chezmoi re-add
+
+# Template files — re-add won't touch .tmpl files, use merge instead
+chezmoi merge ~/.bashrc    # three-way merge: template output vs local file
+```
+
+> **Caution:** `chezmoi add --force ~/.bashrc` will overwrite a `.tmpl` with a
+> plain file, losing your template logic. Prefer `chezmoi merge` for templated
+> files.
 
 ## Adding a new config file
 
