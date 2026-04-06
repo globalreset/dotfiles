@@ -5,8 +5,9 @@
 	defaultBranch = main
 [core]
 	editor = vim
-#   pager = diff-so-fancy | less --tabs=4 -RFX
+{{ if lookPath "delta" -}}
 	pager = delta
+{{ end -}}
 	preloadIndex = true
 	autocrlf = input
 {{ if eq .hostname_class "work" -}}
@@ -31,9 +32,10 @@
 [merge]
 	conflictStyle = zdiff3
 	verbosity = 5
+{{ if lookPath "delta" -}}
 [interactive]
 	diffFilter = delta --color-only
-	#diffFilter = diff-so-fancy --patch
+{{ end -}}
 [diff "pandoc"]
 	textconv=pandoc --to=markdown
 	prompt = false
@@ -42,11 +44,13 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+{{ if lookPath "delta" -}}
 [delta]
 	navigate = true  # use n and N to move between diff sections
 	true-color = always
 	line-numbers = true
 #	side-by-side = true
+{{ end -}}
 [alias]
 	dlog = -c diff.external=difft log --ext-diff
 	dshow = -c diff.external=difft show --ext-diff
