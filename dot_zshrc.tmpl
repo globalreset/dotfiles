@@ -103,7 +103,16 @@ if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
 if hash zoxide 2>/dev/null; then eval "$(zoxide init --cmd cd zsh)"; fi
 if hash bat 2>/dev/null; then alias cat='bat'; fi
 if hash fzf 2>/dev/null; then
-  eval "$(fzf --zsh)"
+  if fzf --zsh &>/dev/null 2>&1; then
+    # fzf 0.48+
+    eval "$(fzf --zsh)"
+  else
+    # Older fzf — source scripts directly
+    # Debian/Ubuntu package paths
+    [[ -f /usr/share/doc/fzf/examples/completion.zsh ]] && source /usr/share/doc/fzf/examples/completion.zsh
+    [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+  fi
+
   export FZF_DEFAULT_OPTS="--preview 'if [[ -d {} ]]; then ls -la {}; elif [[ -f {} ]]; then bat --color=always --style=header,grid --line-range :300 {}; else echo \"(no preview)\"; fi' --preview-window 'right:60%'"
   export FZF_CTRL_R_OPTS="--no-preview"
 fi
