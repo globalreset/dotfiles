@@ -140,3 +140,9 @@ fi
 export {{ $k }}={{ $v }}
 {{ end -}}
 {{ end -}}
+
+{{ if hasKey . "extra_aliases" -}}
+{{ range $k, $v := .extra_aliases -}}
+alias {{ $k }}={{ $v }}
+{{ end -}}
+{{ end -}}

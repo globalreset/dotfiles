@@ -153,3 +153,9 @@ hash -d {{ $k }}="{{ $v }}"
 export {{ $k }}={{ $v }}
 {{ end -}}
 {{ end -}}
+
+{{ if hasKey . "extra_aliases" -}}
+{{ range $k, $v := .extra_aliases -}}
+export {{ $k }}={{ $v }}
+{{ end -}}
+{{ end -}}
