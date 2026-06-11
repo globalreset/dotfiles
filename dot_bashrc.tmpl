@@ -116,6 +116,9 @@ module load {{ . }} 2>&1 >/dev/null
 {{ end -}}
 {{ end -}}
 
+if [ -f $HOME/.bashrc.local ]; then
+  . $HOME/.bashrc.local
+fi
 
 if hash thefuck 2>/dev/null; then eval "$(thefuck --alias)"; fi
 if hash lesspipe.sh 2>/dev/null; then eval "$(lesspipe.sh)"; fi
